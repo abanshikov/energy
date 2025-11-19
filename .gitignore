@@ -1,0 +1,44 @@
+# Виртуальное окружение
+*env*
+*ENV*
+!examples/.env
+
+# Кэш
+**/*/__pycache__/
+__pycache__/
+__pypackages__/
+.cache/
+.webassets-cache
+
+# Приложения
+.git/
+.idea/
+.installed.cfg
+.Python
+.vscode/
+
+# Общие
+build/
+downloads/
+instance/
+lib/
+lib64/
+node_modules/
+parts/
+share/
+var/
+
+# Проект
+archive/
+data/
+dist/
+history.log
+references/
+tests/*.json
+tests/*.csv
+
+# Системные
+*.py[cod]
+**/Thumbs.db
+*$py.class
+
