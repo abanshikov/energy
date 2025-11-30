@@ -1,251 +1,416 @@
-from dataclasses import dataclass
+from enum import Enum
 
-@dataclass(frozen=True)
-class KindOfMeteringDevices:
-    """
-    Представляет виды измерительных приборов в виде неизменяемого класса.
+class KindOfMeteringDevices(Enum):
+    """Перечисление видов приборов учёта.
 
-    Атрибуты:
-        water (str): Название устройства для измерения объёма воды.
-                     По умолчанию — 'Счётчик воды'.
-        electricity (str): Название устройства для измерения потребления электроэнергии.
-                           По умолчанию — 'Счётчик электроэнергии'.
-        gas (str): Название устройства для измерения объёма газа.
-                   По умолчанию — 'Счётчик газа'.
-        warm (str): Название устройства для измерения количества тепловой энергии.
-                    По умолчанию — 'Счётчик тепла'.
-    """
-    water: str = 'Счётчик воды'
-    electricity: str = 'Счётчик электроэнергии'
-    gas: str = 'Счётчик газа'
-    warm: str = 'Счётчик тепла'
+    Используется для классификации типов приборов учёта потребляемых ресурсов.
+    Каждое значение соответствует конкретному типу измерительного прибора.
 
-@dataclass(frozen=True)
-class EnergySupplyExpenseTypes:
-    """
-    Представляет виды расходов энергоснабжения в виде неизменяемого класса.
+    Attributes:
+        WATER: Счетчик воды
+        GAS: Счетчик газа
+        HEAT: Счетчик тепла
+        ELECTRICITY: Счетчик электроэнергии
 
-    Атрибуты:
-        buildings_and_structures (str): Бытовые нужды - расходы на здания и сооружения Общества.
-                                        По умолчанию — 'Здания и сооружения'.
-        gas_pipelines_and_cp_systems (str): Технологические нужды - расходы на энергоснабжения 
-                                           установок ЭХЗ и ПГБ Общества.
-                                           По умолчанию — 'Ремонт и эксплуатация газопроводов и средств ЭХЗ'.
+    Example:
+        >>> devices_kind = KindOfMeteringDevices
+        >>> print(devices_kind.WATER.value)
+        Счетчик воды
+        >>> print(devices_kind.WATER.name)
+        WATER
+        >>> print(devices_kind("Счетчик воды"))
+        KindOfMeteringDevices.WATER
     """
-    buildings_and_structures: str = 'Здания и сооружения'
-    gas_pipelines_and_cp_systems: str = 'Ремонт и эксплуатация газопроводов и средств ЭХЗ'
+    WATER = 'Счетчик воды'
+    GAS = 'Счетчик газа'
+    HEAT = 'Счетчик тепла'
+    ELECTRICITY = 'Счетчик электроэнергии'
 
-@dataclass(frozen=True)
-class UtilityServiceGroups:
-    """
-    Представляет группы видов коммунальных услуг в виде неизменяемого класса.
 
-    Атрибуты:
-        water_supply (str): Водоснабжение. По умолчанию — 'Водоснабжение'.
-        water_disposal (str): Водоотведение. По умолчанию — 'Водоотведение'.
-        heat_supply (str): Теплоснабжение. По умолчанию — 'Теплоснабжение'.
-        power_supply (str): Электроснабжение. По умолчанию — 'Электроснабжение'.
-        negative_impact (str): Негативное воздействие на работу ЦСВ. 
-                              По умолчанию — 'Негативное воздействие на работу ЦСВ'.
-        other (str): Прочее. По умолчанию — 'Прочее'.
-    """
-    water_supply: str = 'Водоснабжение'
-    water_disposal: str = 'Водоотведение'
-    heat_supply: str = 'Теплоснабжение'
-    power_supply: str = 'Электроснабжение'
-    negative_impact: str = 'Негативное воздействие на работу ЦСВ'
-    other: str = 'Прочее'
+class EnergySupplyExpenseTypes(Enum):
+    """Перечисление видов расходов энергоснабжения.
 
-@dataclass(frozen=True)
-class EnergySupplyUnits:
-    """
-    Представляет единицы измерения энергоснабжения в виде неизменяемого класса.
+    Определяет категории расходов на энергоресурсы в зависимости
+    от целевого назначения использования энергии.
 
-    Атрибуты:
-        gcal (str): Гигакалория. По умолчанию — 'Гкал'.
-        kwh (str): Киловатт-час. По умолчанию — 'кВт*ч'.
-        cubic_meter (str): Кубический метр. По умолчанию — 'м3'.
-        thousand_cubic_meter (str): Тысяча кубических метров. По умолчанию — 'тыс. м3'.
-        percent (str): Процент. По умолчанию — '%'.
-        conditional_unit (str): Условная единица (используется, если данные о количестве 
-                               потреблённого энергоресурса не известны).
-                               По умолчанию — 'Условная единица'.
-        piece (str): Штука. По умолчанию — 'шт.'.
-        hour (str): Час. По умолчанию — 'ч.'.
-    """
-    gcal: str = 'Гкал'
-    kwh: str = 'кВт*ч'
-    cubic_meter: str = 'м3'
-    thousand_cubic_meter: str = 'тыс. м3'
-    percent: str = '%'
-    conditional_unit: str = 'Условная единица'
-    piece: str = 'шт.'
-    hour: str = 'ч.'
+    Attributes:
+        BUILDINGS_STRUCTURES: Здания и сооружения (бытовые нужды)
+        PIPELINES_MAINTENANCE: Ремонт и эксплуатация газопроводов и средств ЭХЗ (технологические нужды)
 
-@dataclass(frozen=True)
-class CablePurposes:
+    Example:
+        >>> expense_types = EnergySupplyExpenseTypes
+        >>> print(expense_types.BUILDINGS_STRUCTURES.value)
+        Здания и сооружения
+        >>> print(expense_types.BUILDINGS_STRUCTURES.name)
+        BUILDINGS_STRUCTURES
+        >>> print(expense_types("Здания и сооружения"))
+        EnergySupplyExpenseTypes.BUILDINGS_STRUCTURES
     """
-    Представляет назначения кабелей в виде неизменяемого класса.
+    BUILDINGS_STRUCTURES = 'Здания и сооружения'
+    PIPELINES_MAINTENANCE = 'Ремонт и эксплуатация газопроводов и средств ЭХЗ'
 
-    Атрибуты:
-        power (str): Питающий кабель. По умолчанию — 'Питающий'.
-        drainage_ku_ap (str): Дренажный КУап. По умолчанию — 'Дренажный КУап'.
-        drainage_ku_gp (str): Дренажный КУгп. По умолчанию — 'Дренажный КУгп'.
-        drainage_to_railway (str): Дренажный к рельсу ЖД. По умолчанию — 'Дренажный к рельсу ЖД'.
-        connecting_line (str): Соединительная магистраль. По умолчанию — 'Соединительная магистраль'.
-    """
-    power: str = 'Питающий'
-    drainage_ku_ap: str = 'Дренажный КУап'
-    drainage_ku_gp: str = 'Дренажный КУгп'
-    drainage_to_railway: str = 'Дренажный к рельсу ЖД'
-    connecting_line: str = 'Соединительная магистраль'
 
-@dataclass(frozen=True)
-class ProtectedStructureNames:
-    """
-    Представляет наименования защищаемых сооружений в виде неизменяемого класса.
+class UtilityServiceGroups(Enum):
+    """Перечисление групп видов коммунальных услуг.
 
-    Атрибуты:
-        gas_pipeline (str): Газопровод. По умолчанию — 'Газопровод'.
-        casing (str): Футляр. По умолчанию — 'Футляр'.
-    """
-    gas_pipeline: str = 'Газопровод'
-    casing: str = 'Футляр'
+    Содержит основные категории коммунальных услуг, предоставляемых
+    населению и организациям для обеспечения комфортных условий жизнедеятельности.
 
-@dataclass(frozen=True)
-class ESOReadingSubmissionPeriods:
-    """
-    Представляет периоды предоставления показаний в ЭСО в виде неизменяемого класса.
+    Attributes:
+        WATER_DISPOSAL: Водоотведение (услуги по отводу сточных вод)
+        WATER_SUPPLY: Водоснабжение (услуги по поставке холодной и горячей воды)
+        NEGATIVE_IMPACT: Негативное воздействие на работу ЦСВ
+        OTHER: Прочие коммунальные услуги
+        HEAT_SUPPLY: Теплоснабжение (услуги по поставке тепловой энергии)
+        ELECTRICITY_SUPPLY: Электроснабжение (услуги по поставке электрической энергии)
 
-    Атрибуты:
-        until_20th (str): До 20 числа отчетного месяца. По умолчанию — 'До 20 числа отчетного месяца'.
-        until_22nd (str): До 22 числа отчетного месяца. По умолчанию — 'До 22 числа отчетного месяца'.
-        until_23rd (str): До 23 числа отчетного месяца. По умолчанию — 'До 23 числа отчетного месяца'.
-        until_25th (str): До 25 числа отчетного месяца. По умолчанию — 'До 25 числа отчетного месяца'.
-        until_month_end (str): До конца месяца. По умолчанию — 'До конца месяца'.
-        half_year (str): Полугодие. По умолчанию — 'Полугодие'.
+    Example:
+        >>> service_groups = UtilityServiceGroups
+        >>> print(service_groups.ELECTRICITY_SUPPLY.value)
+        Электроснабжение
+        >>> print(service_groups.ELECTRICITY_SUPPLY.name)
+        ELECTRICITY_SUPPLY
+        >>> print(service_groups("Электроснабжение"))
+        UtilityServiceGroups.ELECTRICITY_SUPPLY
     """
-    until_20th: str = 'До 20 числа отчетного месяца'
-    until_22nd: str = 'До 22 числа отчетного месяца'
-    until_23rd: str = 'До 23 числа отчетного месяца'
-    until_25th: str = 'До 25 числа отчетного месяца'
-    until_month_end: str = 'До конца месяца'
-    half_year: str = 'Полугодие'
+    WATER_DISPOSAL = 'Водоотведение'
+    WATER_SUPPLY = 'Водоснабжение'
+    NEGATIVE_IMPACT = 'Негативное воздействие на работу ЦСВ'
+    OTHER = 'Прочее'
+    HEAT_SUPPLY = 'Теплоснабжение'
+    ELECTRICITY_SUPPLY = 'Электроснабжение'
 
-@dataclass(frozen=True)
-class AnodeGroundingPositions:
-    """
-    Представляет расположения анодных заземлений в виде неизменяемого класса.
 
-    Атрибуты:
-        horizontal (str): Горизонтально. По умолчанию — 'Горизонтально'.
-        vertical (str): Вертикально. По умолчанию — 'Вертикально'.
-    """
-    horizontal: str = 'Горизонтально'
-    vertical: str = 'Вертикально'
+class EnergySupplyUnits(Enum):
+    """Перечисление единиц измерения энергоснабжения.
 
-@dataclass(frozen=True)
-class EnergySupplyPrimaryDocReceiptMethods:
-    """
-    Представляет способы получения первичных документов энергоснабжения в виде неизменяемого класса.
+    Определяет стандартные единицы измерения для различных видов
+    энергоресурсов и коммунальных услуг.
 
-    Атрибуты:
-        in_person (str): Личное получение. По умолчанию — 'Нарочно'.
-        by_mail (str): Через почтовые отправления. По умолчанию — 'По почте'.
-        by_email (str): По электронной почте. По умолчанию — 'По электронной почте'.
-        edo (str): Электронный документооборот. По умолчанию — 'ЭДО'.
-        other (str): Прочее. По умолчанию — 'Прочее'.
-    """
-    in_person: str = 'Нарочно'
-    by_mail: str = 'По почте'
-    by_email: str = 'По электронной почте'
-    edo: str = 'ЭДО'
-    other: str = 'Прочее'
+    Attributes:
+        GIGACALORIE: Гигакалория (единица измерения тепловой энергии)
+        KILOWATT_HOUR: Киловатт-час (единица измерения электрической энергии)
+        CUBIC_METER: Кубический метр (единица измерения объема воды и газа)
+        PERCENT: Процент (относительная единица измерения)
+        THOUSAND_CUBIC_METERS: Тысяча кубических метров (единица измерения больших объемов газа)
+        CONVENTIONAL_UNIT: Условная единица (используется когда точное количество неизвестно)
+        PIECE: Штука (единица измерения для подсчета отдельных объектов)
+        HOUR: Час (единица измерения времени работы оборудования)
 
-@dataclass(frozen=True)
-class RouteTerritorialAffiliations:
+    Example:
+        >>> units = EnergySupplyUnits
+        >>> print(units.KILOWATT_HOUR.value)
+        кВт*ч
+        >>> print(units.KILOWATT_HOUR.name)
+        KILOWATT_HOUR
+        >>> print(units("кВт*ч"))
+        EnergySupplyUnits.KILOWATT_HOUR
     """
-    Представляет территориальные принадлежности маршрутов в виде неизменяемого класса.
+    GIGACALORIE = 'Гкал'
+    KILOWATT_HOUR = 'кВт*ч'
+    CUBIC_METER = 'м3'
+    PERCENT = '%'
+    THOUSAND_CUBIC_METERS = 'тыс. м3'
+    CONVENTIONAL_UNIT = 'Условная единица'
+    PIECE = 'шт.'
+    HOUR = 'ч.'
 
-    Атрибуты:
-        urban (str): Городской. По умолчанию — 'Городской'.
-        zarechny (str): Заречный. По умолчанию — 'Заречный'.
-    """
-    urban: str = 'Городской'
-    zarechny: str = 'Заречный'
 
-@dataclass(frozen=True)
-class CPSTerritorialAffiliations:
-    """
-    Представляет территориальные принадлежности ЭХЗ в виде неизменяемого класса.
+class CablePurposes(Enum):
+    """Перечисление назначений кабелей в системах электрохимзащиты.
 
-    Атрибуты:
-        city (str): Город. По умолчанию — 'Город'.
-        village (str): Село. По умолчанию — 'Село'.
-    """
-    city: str = 'Город'
-    village: str = 'Село'
+    Классифицирует кабели по их функциональному назначению
+    в системах защиты подземных сооружений от коррозии.
 
-@dataclass(frozen=True)
-class AnodeGroundingTypes:
-    """
-    Представляет типы анодных заземлений в виде неизменяемого класса.
+    Attributes:
+        POWER: Питающий кабель (для подачи электроэнергии к установкам ЭХЗ)
+        DRAINAGE_AP: Дренажный кабель для компенсирующих устройств АП
+        DRAINAGE_GP: Дренажный кабель для компенсирующих устройств ГП
+        DRAINAGE_RAILWAY: Дренажный кабель, подключенный к рельсам железной дороги
+        CONNECTION_MAIN: Соединительная магистраль (кабель для связи между установками)
 
-    Атрибуты:
-        deep (str): Глубинное. По умолчанию — 'Глубинное'.
-        surface (str): Поверхностное. По умолчанию — 'Поверхностное'.
+    Example:
+        >>> cable_purposes = CablePurposes
+        >>> print(cable_purposes.POWER.value)
+        Питающий
+        >>> print(cable_purposes.POWER.name)
+        POWER
+        >>> print(cable_purposes("Питающий"))
+        CablePurposes.POWER
     """
-    deep: str = 'Глубинное'
-    surface: str = 'Поверхностное'
+    POWER = 'Питающий'
+    DRAINAGE_AP = 'Дренажный КУап'
+    DRAINAGE_GP = 'Дренажный КУгп'
+    DRAINAGE_RAILWAY = 'Дренажный к рельсу ЖД'
+    CONNECTION_MAIN = 'Соединительная магистраль'
 
-@dataclass(frozen=True)
-class RoadCrossingTypes:
-    """
-    Представляет типы переходов под дорогами в виде неизменяемого класса.
 
-    Атрибуты:
-        automotive (str): Автомобильный. По умолчанию — 'Автомобильный'.
-        railway (str): Железнодорожный. По умолчанию — 'Железнодорожный'.
-    """
-    automotive: str = 'Автомобильный'
-    railway: str = 'Железнодорожный'
+class ProtectedStructures(Enum):
+    """Перечисление наименований защищаемых сооружений.
 
-@dataclass(frozen=True)
-class CPSUnitPowerLineTypes:
-    """
-    Представляет типы питающих линий установок ЭХЗ в виде неизменяемого класса.
+    Определяет типы подземных сооружений, которые защищаются
+    системами электрохимической защиты от коррозии.
 
-    Атрибуты:
-        overhead_line (str): Воздушная линия. По умолчанию — 'ВЛ'.
-        cable_line (str): Кабельная линия. По умолчанию — 'КЛ'.
-    """
-    overhead_line: str = 'ВЛ'
-    cable_line: str = 'КЛ'
+    Attributes:
+        GAS_PIPELINE: Газопровод (магистральный или распределительный трубопровод)
+        CASING: Футляр (защитный кожух для трубопроводов при пересечении препятствий)
 
-@dataclass(frozen=True)
-class CPSConverterTypes:
+    Example:
+        >>> structures = ProtectedStructures
+        >>> print(structures.GAS_PIPELINE.value)
+        Газопровод
+        >>> print(structures.GAS_PIPELINE.name)
+        GAS_PIPELINE
+        >>> print(structures("Газопровод"))
+        ProtectedStructures.GAS_PIPELINE
     """
-    Представляет типы преобразователей СКЗ в виде неизменяемого класса.
+    GAS_PIPELINE = 'Газопровод'
+    CASING = 'Футляр'
 
-    Атрибуты:
-        transformer (str): Трансформаторный. По умолчанию — 'Трансформаторный'.
-        inverter (str): Инверторный. По умолчанию — 'Инверторный'.
-    """
-    transformer: str = 'Трансформаторный'
-    inverter: str = 'Инверторный'
 
-@dataclass(frozen=True)
-class CPSUnitTypes:
-    """
-    Представляет типы установок ЭХЗ в виде неизменяемого класса.
+class MeterReadingSubmissionPeriods(Enum):
+    """Перечисление периодов предоставления показаний в энергоснабжающие организации.
 
-    Атрибуты:
-        cathodic (str): Катодная. По умолчанию — 'Катодная'.
-        drainage (str): Дренажная. По умолчанию — 'Дренажная'.
-        protector (str): Протекторная. По умолчанию — 'Протекторная'.
-        insulating_joints (str): Изолирующие соединения. По умолчанию — 'Изолирующие соединения'.
+    Определяет сроки передачи данных приборов учёта согласно договорным обязательствам
+    с энергоснабжающими компаниями.
+
+    Attributes:
+        UNTIL_20TH: Показания должны быть переданы до 20 числа текущего месяца
+        UNTIL_22ND: Показания должны быть переданы до 22 числа текущего месяца
+        UNTIL_23RD: Показания должны быть переданы до 23 числа текущего месяца
+        UNTIL_25TH: Показания должны быть переданы до 25 числа текущего месяца
+        UNTIL_MONTH_END: Показания должны быть переданы до окончания текущего месяца
+        HALF_YEAR: Показания предоставляются с периодичностью раз в полгода
+
+    Example:
+        >>> periods = MeterReadingSubmissionPeriods
+        >>> print(periods.UNTIL_25TH.value)
+        До 25 числа отчетного месяца
+        >>> print(periods.UNTIL_25TH.name)
+        UNTIL_25TH
+        >>> print(periods("До 25 числа отчетного месяца"))
+        MeterReadingSubmissionPeriods.UNTIL_25TH
     """
-    cathodic: str = 'Катодная'
-    drainage: str = 'Дренажная'
-    protector: str = 'Протекторная'
-    insulating_joints: str = 'Изолирующие соединения'
+    UNTIL_20TH = 'До 20 числа отчетного месяца'
+    UNTIL_22ND = 'До 22 числа отчетного месяца'
+    UNTIL_23RD = 'До 23 числа отчетного месяца'
+    UNTIL_25TH = 'До 25 числа отчетного месяца'
+    UNTIL_MONTH_END = 'До конца месяца'
+    HALF_YEAR = 'Полугодие'
+
+
+class AnodeGroundingPlacements(Enum):
+    """Перечисление расположений анодных заземлений.
+
+    Определяет пространственную ориентацию анодных заземлений
+    в системах электрохимической защиты.
+
+    Attributes:
+        HORIZONTAL: Горизонтальное расположение (заземлитель уложен в траншее)
+        VERTICAL: Вертикальное расположение (заземлитель установлен вертикально в грунте)
+
+    Example:
+        >>> placements = AnodeGroundingPlacements
+        >>> print(placements.VERTICAL.value)
+        Вертикально
+        >>> print(placements.VERTICAL.name)
+        VERTICAL
+        >>> print(placements("Вертикально"))
+        AnodeGroundingPlacements.VERTICAL
+    """
+    HORIZONTAL = 'Горизонтально'
+    VERTICAL = 'Вертикально'
+
+
+class PrimaryDocumentsReceivingMethods(Enum):
+    """Перечисление способов получения первичных документов энергоснабжения.
+
+    Описывает различные каналы получения расчетных документов
+    от энергоснабжающих организаций.
+
+    Attributes:
+        IN_PERSON: Личное получение (документы забираются курьером или представителем)
+        MAIL: Почтовые отправления (документы приходят традиционной почтой)
+        EMAIL: Электронная почта (документы отправляются на email в электронном виде)
+        OTHER: Прочие способы получения документов
+        EDI: Электронный документооборот (через специализированные системы ЭДО)
+
+    Example:
+        >>> methods = PrimaryDocumentsReceivingMethods
+        >>> print(methods.EDI.value)
+        ЭДО
+        >>> print(methods.EDI.name)
+        EDI
+        >>> print(methods("ЭДО"))
+        PrimaryDocumentsReceivingMethods.EDI
+    """
+    IN_PERSON = 'Нарочно'
+    MAIL = 'По почте'
+    EMAIL = 'По электронной почте'
+    OTHER = 'Прочее'
+    EDI = 'ЭДО'
+
+
+class RouteTerritorialAffiliations(Enum):
+    """Перечисление территориальных принадлежностей маршрутов.
+
+    Классифицирует маршруты обслуживания по их территориальной
+    принадлежности к различным зонам обслуживания.
+
+    Attributes:
+        URBAN: Городской маршрут (обслуживание объектов в городской черте)
+        ZARECHNY: Заречный маршрут (обслуживание объектов в Заречной зоне)
+
+    Example:
+        >>> routes = RouteTerritorialAffiliations
+        >>> print(routes.URBAN.value)
+        Городской
+        >>> print(routes.URBAN.name)
+        URBAN
+        >>> print(routes("Городской"))
+        RouteTerritorialAffiliations.URBAN
+    """
+    URBAN = 'Городской'
+    ZARECHNY = 'Заречный'
+
+
+class ECPTerritorialAffiliations(Enum):
+    """Перечисление территориальных принадлежностей ЭХЗ.
+
+    Определяет территориальную классификацию объектов
+    электрохимической защиты по типу населенного пункта.
+
+    Attributes:
+        CITY: Городская территория (объекты ЭХЗ расположены в городе)
+        VILLAGE: Сельская территория (объекты ЭХЗ расположены в селе)
+
+    Example:
+        >>> territories = ECPTerritorialAffiliations
+        >>> print(territories.CITY.value)
+        Город
+        >>> print(territories.CITY.name)
+        CITY
+        >>> print(territories("Город"))
+        ECPTerritorialAffiliations.CITY
+    """
+    CITY = 'Город'
+    VILLAGE = 'Село'
+
+
+class AnodeGroundingTypes(Enum):
+    """Перечисление типов анодных заземлений.
+
+    Классифицирует анодные заземления по их конструктивному
+    исполнению и способу установки в грунт.
+
+    Attributes:
+        DEEP: Глубинное заземление (устанавливается на значительную глубину)
+        SURFACE: Поверхностное заземление (устанавливается в верхних слоях грунта)
+
+    Example:
+        >>> grounding_types = AnodeGroundingTypes
+        >>> print(grounding_types.DEEP.value)
+        Глубинное
+        >>> print(grounding_types.DEEP.name)
+        DEEP
+        >>> print(grounding_types("Глубинное"))
+        AnodeGroundingTypes.DEEP
+    """
+    DEEP = 'Глубинное'
+    SURFACE = 'Поверхностное'
+
+
+class RoadCrossingTypes(Enum):
+    """Перечисление типов переходов под дорогами.
+
+    Определяет категории автомобильных и железнодорожных путей,
+    под которыми прокладываются защищаемые сооружения.
+
+    Attributes:
+        AUTOMOBILE: Автомобильная дорога (переход под автодорогой любого класса)
+        RAILWAY: Железная дорога (переход под железнодорожными путями)
+
+    Example:
+        >>> crossings = RoadCrossingTypes
+        >>> print(crossings.RAILWAY.value)
+        Железнодорожный
+        >>> print(crossings.RAILWAY.name)
+        RAILWAY
+        >>> print(crossings("Железнодорожный"))
+        RoadCrossingTypes.RAILWAY
+    """
+    AUTOMOBILE = 'Автомобильный'
+    RAILWAY = 'Железнодорожный'
+
+
+class ECPSupplyLineTypes(Enum):
+    """Перечисление типов питающих линий установок ЭХЗ.
+
+    Классифицирует линии электропередачи, используемые для
+    питания установок электрохимической защиты.
+
+    Attributes:
+        OVERHEAD_LINE: Воздушная линия (ЛЭП, смонтированная на опорах над землей)
+        CABLE_LINE: Кабельная линия (ЛЭП, проложенная кабелем в земле или по конструкциям)
+
+    Example:
+        >>> line_types = ECPSupplyLineTypes
+        >>> print(line_types.OVERHEAD_LINE.value)
+        ВЛ
+        >>> print(line_types.OVERHEAD_LINE.name)
+        OVERHEAD_LINE
+        >>> print(line_types("ВЛ"))
+        ECPSupplyLineTypes.OVERHEAD_LINE
+    """
+    OVERHEAD_LINE = 'ВЛ'
+    CABLE_LINE = 'КЛ'
+
+
+class CPSConverterTypes(Enum):
+    """Перечисление типов преобразователей станций катодной защиты.
+
+    Определяет технологические типы преобразователей, используемых
+    в станциях катодной защиты для преобразования электрической энергии.
+
+    Attributes:
+        TRANSFORMER: Трансформаторный преобразователь (на основе силового трансформатора)
+        INVERTER: Инверторный преобразователь (на основе полупроводниковых элементов)
+
+    Example:
+        >>> converter_types = CPSConverterTypes
+        >>> print(converter_types.INVERTER.value)
+        Инверторный
+        >>> print(converter_types.INVERTER.name)
+        INVERTER
+        >>> print(converter_types("Инверторный"))
+        CPSConverterTypes.INVERTER
+    """
+    TRANSFORMER = 'Трансформаторный'
+    INVERTER = 'Инверторный'
+
+
+class ECPInstallationTypes(Enum):
+    """Перечисление типов установок электрохимической защиты.
+
+    Содержит основные типы установок ЭХЗ, различающиеся по
+    принципу действия и способу защиты от коррозии.
+
+    Attributes:
+        CATHODIC: Катодная установка (защита путем катодной поляризации сооружения)
+        DRAINAGE: Дренажная установка (защита путем отвода блуждающих токов)
+        PROTECTOR: Протекторная установка (защита с помощью протекторов)
+        ISOLATING_JOINTS: Изолирующие соединения (устройства для электрической изоляции)
+
+    Example:
+        >>> installation_types = ECPInstallationTypes
+        >>> print(installation_types.CATHODIC.value)
+        Катодная
+        >>> print(installation_types.CATHODIC.name)
+        CATHODIC
+        >>> print(installation_types("Катодная"))
+        ECPInstallationTypes.CATHODIC
+    """
+    CATHODIC = 'Катодная'
+    DRAINAGE = 'Дренажная'
+    PROTECTOR = 'Протекторная'
+    ISOLATING_JOINTS = 'Изолирующие соединения'
